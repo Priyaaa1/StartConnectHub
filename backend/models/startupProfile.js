@@ -19,11 +19,8 @@ const startupProfileSchema = new Schema({
       sharesIssued: { type: Number, required: true }
     }
   ],
-  contactInfo: {
+  
     email: { type: String, required: true },
-    phone: { type: String, required: true },
-    address: { type: String, required: true }
-  },
   password: { type: String, required: true }, // Changed type to String for password
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
