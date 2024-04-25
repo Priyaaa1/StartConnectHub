@@ -1,27 +1,9 @@
-import React, { useContext ,useState} from "react";
+import React from "react";
 import styles from "./header.module.css";
 import sharkUpLogo from "../../data/LogoName.png";
-import { Link, useNavigate } from "react-router-dom";
-import authContext from "../../utils/auth-hook";
-import firebase from "firebase";
-const Header = () => {
-  const isAuth = useContext(authContext);
-    const auth = firebase.auth();
-    const authData = useContext(authContext);
+import { Link } from "react-router-dom";
 
-  const [loggedOut,setLoggedOut]=useState(false);
-   
-    const signouttt = () => {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          setLoggedOut(true);
-          authData.authTriggered();
-          console.log("logging out");
-        });
-    };
-  let navigate = useNavigate();
+const Header = () => {
   return (
     <div>
       <div className={`${styles.headerWrapper}`}>
@@ -50,9 +32,13 @@ const Header = () => {
             <Link to="/startup">
               <li>Start Ups</li>
             </Link>
+            {/* Example of conditional rendering for login/logout */}
+            {/* Adjust this logic based on your authentication */}
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
           </ul>
         </div>
-       
       </div>
     </div>
   );
