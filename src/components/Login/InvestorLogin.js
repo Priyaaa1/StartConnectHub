@@ -1,162 +1,79 @@
-import React, { useEffect,useState,useContext } from 'react'
-import "./investorLogin.css";
-import firebase from "firebase";
-import authContext from "../../utils/auth-hook";
 import { Link, useNavigate } from "react-router-dom";
-function InvestorLogin() {
-     const [credentials, setCredentials] = useState({
-       email: "",
-       password: "",
-     });
-    const navigate = useNavigate();
-     const auth = firebase.auth();
-     const [redirect, setRedirect] = useState(false);
+import React, { useState } from "react";
+import { Form, Button } from "react-bootstrap";
+import axios from "axios"; // Import Axios for making HTTP requests
+import logo from "../../data/completeLogo.png";
+import "./login.css";
+
+function Login() {
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
   const [redirectHome, setRedirectHome] = useState(false);
   const [redirectRegistration, setRedirectRegistration] = useState(false);
-  const authData = useContext(authContext);
-   const db = firebase.firestore();
-    useEffect(()=>{
-        const signUpButton = document.getElementById("signUp");
-        const signInButton = document.getElementById("signIn");
-        const container = document.getElementById("container");
 
-        signUpButton.addEventListener("click", () =>
-          container.classList.add("right-panel-active")
-        );
-
-        signInButton.addEventListener("click", () =>
-          container.classList.remove("right-panel-active")
-        );
-    },[]);
-
-function handleSignup(event) {
-  event.preventDefault();
-  auth
-    .createUserWithEmailAndPassword(credentials.email, credentials.password)
-    .then((userCredentials) => {
-      const user = userCredentials.user;
-      user
-        .sendEmailVerification()
-        .then(() => {
-          alert("Check your email inbox !!!");
-          setCredentials({ email: "", password: "" });
-        })
-        .catch((e) => {
-          alert("ERROR : " + e.message);
-        });
-      auth.signOut();
-    })
-    .catch((err) => {
-      alert("ERROR : " + err.message);
+  const handleChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    setCredentials((prev) => {
+      return { ...prev, [name]: value };
     });
-}
-function handleSignin(event) {
-  event.preventDefault();
-  console.log("sign in");
-  auth
-    .signInWithEmailAndPassword(credentials.email, credentials.password)
-    .then((userCredentials) => {
-      const user = userCredentials.user;
-      if (user.emailVerified) {
-        db.collection("Investors")
-          .doc(user.uid)
-          .get()
-          .then((snapshot) => {
-            if (snapshot.exists) {
-              setRedirectHome(true);
-              authData.authTriggered();
-            } else {
-              setRedirectRegistration(true);
-              console.log("Afa");
-              navigate("/investor/register");
-            }
-          });
+  };
+
+  const handleSignin = async () => {
+    try {
+      // Send POST request to your backend API for login
+      const response = await axios.post('http://127.0.0.1:3000/investor/login', credentials);
+      if (response.data.message === 'Login successful') {
+        setRedirectHome(true); // Redirect to home page upon successful login
       } else {
-        alert("Please verify your email");
+        alert('Invalid credentials. Please try again.');
       }
-    })
-    .catch((error) => {
-      alert("ERROR : " + error.message);
-    });
-}
-const handleChange = (event) => {
-  event.preventDefault();
-  const { name, value } = event.target;
-  setCredentials((prev) => {
-    return { ...prev, [name]: value };
-  });
-};
+    } catch (error) {
+      console.error('Error logging in:', error.message);
+      alert('Error logging in. Please try again.');
+    }
+  };
 
   return (
     <div>
-      {redirectRegistration ? () => navigate("/investor/register") : null}
-      {redirectHome ? () => navigate("/") : null}
-      <div className="containerr" id="container">
-        <div className="form-container sign-up-container">
-          <form>
-            <h1>Create Account</h1>
-            <input
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={credentials.email}
-              onChange={handleChange}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-            />
-            <button onClick={handleSignup}>Sign Up</button>
-          </form>
-        </div>
-        <div className="form-container sign-in-container">
-          <form >
-            <h1>Sign in</h1>
-
-            <input
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={credentials.email}
-              onChange={handleChange}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-            />
-            <a href="#">Forgot your password?</a>
-            <button onClick={(e)=>handleSignin(e)}>Sign In</button>
-          </form>
-        </div>
-        <div className="overlay-container">
-          <div className="overlay">
-            <div className="overlay-panel overlay-left">
-              <h1>Welcome Back!</h1>
-              <p>
-                To keep connected with us please login with your personal info
-              </p>
-              <button className="ghost" id="signIn">
-                Sign In
-              </button>
-            </div>
-            <div className="overlay-panel overlay-right">
-              <h1>Hello, Investor!</h1>
-              <p>Enter your personal details and grow with us!</p>
-              <button className="ghost" id="signUp">
-                Sign Up
-              </button>
-            </div>
-          </div>
+      {redirectRegistration ? navigate("/investor/register") : null}
+      {redirectHome ? navigate("/") : null}
+      <div className="section-log-a" id="contact">
+        <div className="form-container-a">
+          <img src={logo} className="form-img-a" alt="login" />
+          <Form className="contact-form-a">
+            <h3>LOGIN</h3>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                name="email"
+                value={credentials.email}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formBasicPassword">
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={credentials.password}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Button variant="primary" onClick={handleSignin}>
+              Login
+            </Button>
+            <p>
+              New here? No issue, kindly <Link to="/investor/register">Register here</Link>
+            </p>
+            <br />
+            <hr className="line-bro" />
+          </Form>
         </div>
       </div>
     </div>
   );
 }
 
-export default InvestorLogin
+export default Login;
