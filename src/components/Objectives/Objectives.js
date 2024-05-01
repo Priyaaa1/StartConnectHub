@@ -1,15 +1,37 @@
-import React from 'react'
-import Flow from "../../data/flow-1.png"
-import "./objectives.css";
-function Objectives() {
+import React from 'react';
+import './objectives.css'; // Import your CSS file
+
+const Objectives = () => {
   return (
-    <div className='objective_main'>
-        <h1>Objectives</h1>
-        <p>There exists no such platform where the investor can directly invest in a startup of their choice . Shark Up will bridge this gap and provide an interface for the startup to promote their idea and for the company to invest in a startup in a safe and trusted way.</p>
-        <p>We at Shark Up aim to provide a platform to startups to raise external funding or capital in order to expand their businesses into new markets or locations. It also allows them to invest in research & development (R&D) or to fend off the competition. This in turn helps generate more employment</p>
-        <img className='flow_img' src={Flow}/>
+    <div className="objectives-wrapper">
+      <h1>Our Objectives</h1>
+      <div className="objective-item">
+        <h2>Objective 1</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu sit amet nisi posuere commodo.
+          Suspendisse ut tellus nec ligula interdum vestibulum. Duis sed massa nisi. Sed ac dictum velit, id
+          vestibulum velit. Quisque fermentum enim eget mi aliquet, vel fermentum justo vestibulum. Ut convallis
+          mauris in odio mollis viverra.
+        </p>
+      </div>
+      <div className="objective-item">
+        <h2>Objective 2</h2>
+        <p>
+          Integer sit amet ante vel felis pharetra placerat. Duis bibendum, libero id tristique eleifend, leo
+          turpis scelerisque ipsum, at convallis nisl dui a libero. Aliquam sit amet ultrices libero. Nulla mollis
+          lacus sit amet augue tincidunt, ut vehicula nunc feugiat.
+        </p>
+      </div>
+      <div className="objective-item">
+        <h2>Objective 3</h2>
+        <p>
+          Sed nec mi nisl. Vivamus eu turpis sit amet quam elementum posuere. Nulla nec vestibulum nisl. Cras
+          aliquam magna vel nulla sagittis, at pulvinar magna sagittis. Sed id arcu volutpat, pharetra dui nec,
+          feugiat odio.
+        </p>
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default Objectives;

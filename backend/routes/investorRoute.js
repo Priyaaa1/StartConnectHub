@@ -39,12 +39,13 @@ router.post('/signup', async (req, res) => {
     category,
     preferredCommunication,
     availability,
-    password
+    password,
+    links
   } = req.body;
 
   try {
     // Check if the email already exists
-    const existingUser = await InvestorProfile.findOne({ 'contactInfo.email': email });
+    const existingUser = await InvestorProfile.findOne({ 'email': email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already exists' });
     }
@@ -66,7 +67,8 @@ router.post('/signup', async (req, res) => {
       fundingCriteria,
       preferredCommunication,
       availability,
-      password: hashedPassword
+      password: hashedPassword,
+      links,
     });
 
     await newUser.save();
@@ -87,7 +89,7 @@ router.post('/login', async (req, res) => {
 
   try {
     // Check if the user exists
-    const user = await InvestorProfile.findOne({ 'contactInfo.email': email });
+    const user = await InvestorProfile.findOne({ 'email': email });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -105,6 +107,24 @@ router.post('/login', async (req, res) => {
     res.status(200).json({ message: 'Login successful', token, user });
   } catch (error) {
     console.error('Error logging in user:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+router.get('/me', auth, async (req, res) => {
+  try {
+    // Get the userId from the auth middleware
+    const userId = req.user.userId;
+
+    // Fetch the investor profile using the userId
+    const investor = await InvestorProfile.findById(userId);
+
+    if (!investor) {
+      return res.status(404).json({ message: 'Investor profile not found' });
+    }
+
+    res.status(200).json(investor);
+  } catch (error) {
+    console.error('Error fetching investor profile:', error.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

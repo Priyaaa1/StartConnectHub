@@ -1,15 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Button } from "react-bootstrap";
-import axios from "axios"; // Import Axios for making HTTP requests
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../data/completeLogo.png";
 import "./login.css";
+import { AuthContext } from "../context/AuthContext";
 
 function Login() {
+  const { setIsLoggedIn } = useContext(AuthContext);
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const navigate = useNavigate();
-  const [redirectHome, setRedirectHome] = useState(false);
-  const [redirectRegistration, setRedirectRegistration] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -21,23 +22,25 @@ function Login() {
 
   const handleSignin = async () => {
     try {
-      // Send POST request to your backend API for login
-      const response = await axios.post('http://your-backend-api-url/login', credentials);
-      if (response.data.message === 'Login successful') {
-        setRedirectHome(true); // Redirect to home page upon successful login
+      const response = await axios.post(
+        "http://localhost:3001/startup/login",
+        credentials
+      );
+      if (response.data.message === "Login successful") {
+        localStorage.setItem("token", response.data.token);
+        setIsLoggedIn(true); // Set isLoggedIn to true upon successful login
+        navigate("/startup/me");
       } else {
-        alert('Invalid credentials. Please try again.');
+        setErrorMessage("Invalid credentials. Please try again.");
       }
     } catch (error) {
-      console.error('Error logging in:', error.message);
-      alert('Error logging in. Please try again.');
+      console.error("Error logging in:", error.message);
+      setErrorMessage("Error logging in. Please try again.");
     }
   };
 
   return (
     <div>
-      {redirectRegistration ? navigate("/user/register") : null}
-      {redirectHome ? navigate("/") : null}
       <div className="section-log-a" id="contact">
         <div className="form-container-a">
           <img src={logo} className="form-img-a" alt="login" />
@@ -65,8 +68,10 @@ function Login() {
               Login
             </Button>
             <p>
-              New here? No issue, kindly <Link to="/startup/register">Register here</Link>
+              New here? No issue, kindly{" "}
+              <Link to="/startup/register">Register here</Link>
             </p>
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
             <br />
             <hr className="line-bro" />
           </Form>

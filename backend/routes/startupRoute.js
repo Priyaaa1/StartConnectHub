@@ -18,13 +18,14 @@ router.post('/signup', async (req, res) => {
     category,
     businessPlan,
     investors,
+    links,
     email,
     password
   } = req.body;
 
   try {
     // Check if the email already exists
-    const existingUser = await StartupProfile.findOne({ 'contactInfo.email': email });
+    const existingUser = await StartupProfile.findOne({ 'email': email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already exists' });
     }
@@ -45,7 +46,8 @@ router.post('/signup', async (req, res) => {
       businessPlan,
       investors,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      links
     });
 
     await newUser.save();
@@ -66,7 +68,7 @@ router.post('/login', async (req, res) => {
 
   try {
     // Check if the user exists
-    const user = await StartupProfile.findOne({ 'contactInfo.email': email });
+    const user = await StartupProfile.findOne({ 'email': email });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -121,6 +123,22 @@ router.get('/investors/search', auth, async (req, res) => {
     res.status(200).json(investors);
   } catch (error) {
     console.error('Error searching investors:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+router.get('/me', auth, async (req, res) => {
+  try {
+    const userId = req.user.userId; // Assuming your auth middleware sets the userId in the request object
+
+    // Fetch user details using the userId
+    const user = await StartupProfile.findById({'_id':userId});
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user details:', error.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
