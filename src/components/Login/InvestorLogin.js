@@ -8,8 +8,8 @@ import "./login.css";
 function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const navigate = useNavigate();
-  const [redirectHome, setRedirectHome] = useState(false);
-  const [redirectRegistration, setRedirectRegistration] = useState(false);
+  //const [redirectHome, setRedirectHome] = useState(false);
+  //const [redirectRegistration, setRedirectRegistration] = useState(false);
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -22,9 +22,11 @@ function Login() {
   const handleSignin = async () => {
     try {
       // Send POST request to your backend API for login
-      const response = await axios.post('http://127.0.0.1:3000/investor/login', credentials);
+      const response = await axios.post('http://127.0.0.1:3001/investor/login', credentials);
       if (response.data.message === 'Login successful') {
-        setRedirectHome(true); // Redirect to home page upon successful login
+        localStorage.setItem('token',response.data.token)
+        navigate('/startups') 
+        // Redirect to home page upon successful login
       } else {
         alert('Invalid credentials. Please try again.');
       }
@@ -36,8 +38,7 @@ function Login() {
 
   return (
     <div>
-      {redirectRegistration ? navigate("/investor/register") : null}
-      {redirectHome ? navigate("/") : null}
+     
       <div className="section-log-a" id="contact">
         <div className="form-container-a">
           <img src={logo} className="form-img-a" alt="login" />

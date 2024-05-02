@@ -6,11 +6,11 @@ const authMiddleware = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: 'No token provided' });
   }
-
+  
   try {
     const decoded = jwt.verify(token, secretKey);
-    console.log(decoded)
-    req.user = decoded.user;
+    console.log(decoded.user)
+    req.user = decoded;
     console.log(req.user)
     // Check if token is expired
     const currentTimestamp = Math.floor(Date.now() / 1000);
@@ -21,7 +21,7 @@ const authMiddleware = (req, res, next) => {
     next();
   } catch (error) {
     console.error('Token verification error:', error.message);
-    res.status(401).json({ message: 'Invalid token' });
+    res.status(401).json({ message: error });
   }
 };
 

@@ -22,7 +22,8 @@ const investorProfileSchema = new Schema({
   preferredCommunication: { type: String },
   availability: { type: String },
   password: { type: String, required: true },
-  category: { type: String, required: true }, // Added category field
+  category: { type: String, required: true }, 
+  links:{type:String,required:true},// Added category field
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

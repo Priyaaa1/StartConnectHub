@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import Imageupload from "./Imageupload";
-
+import './InvestorRegistration.css'
 function InvestorRegistration() {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
@@ -27,6 +27,7 @@ function InvestorRegistration() {
     availability: "",
     password: "",
     category: "",
+    links:""
   });
   const [registered, setRegistered] = useState(false);
 
@@ -61,8 +62,12 @@ function InvestorRegistration() {
       });
       const data = await response.json();
       console.log("Registration successful:", data);
+      console.log(response.data);
+      // Save token to localStorage
+      localStorage.setItem('token', response.data.token);
       setRegistered(true);
-      navigate("/");
+      setRegistered(true);
+      navigate("/startup");
     } catch (error) {
       console.error("Error registering user:", error);
     }
@@ -75,9 +80,8 @@ function InvestorRegistration() {
         <div className="register_main">
           <Form onSubmit={registerUser} className="register_form">
             <h3>INVESTOR REGISTRATION</h3>
-            <Imageupload center="true" setData={setUserDetails} />
             <Form.Group>
-              <Form.Label>Firm Name</Form.Label>
+              <Form.Label >Firm Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Firm Name"
@@ -87,7 +91,7 @@ function InvestorRegistration() {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Investor Type</Form.Label>
+              <Form.Label >Investor Type</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Investor Type"
@@ -248,6 +252,8 @@ function InvestorRegistration() {
                 value={userDetails.category}
                 onChange={handleChange}
               />
+              <Form.Label>Links</Form.Label>
+              <Form.Control type="text" placeholder="Enter drive link" value={userDetails.links}></Form.Control>
             </Form.Group>
             {/* Submit button */}
             <Button className="submit_btn" variant="primary" type="submit" onClick={registerUser}>

@@ -1,0 +1,35 @@
+.startup-profile {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .startup-profile h2 {
+    margin-bottom: 10px;
+  }
+  
+  .startup-profile p {
+    margin-bottom: 5px;
+  }
+  
+  .startup-profile ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .startup-profile li {
+    margin-bottom: 5px;
+  }
+  
+  .startup-profile a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .startup-profile a:hover {
+    text-decoration: underline;
+  }
+  

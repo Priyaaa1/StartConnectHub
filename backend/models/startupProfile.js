@@ -10,7 +10,7 @@ const startupProfileSchema = new Schema({
   description: { type: String },
   website: { type: String },
   businessPlan: { type: String },
-  category:{type:String},
+  category: { type: String },
   investors: [
     {
       investorName: { type: String, required: true },
@@ -19,9 +19,9 @@ const startupProfileSchema = new Schema({
       sharesIssued: { type: Number, required: true }
     }
   ],
-  
-    email: { type: String, required: true },
-  password: { type: String, required: true }, // Changed type to String for password
+  links: { type: String }, // Remove the trailing comma and define links properly
+  email: { type: String, required: true },
+  password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
